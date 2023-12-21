@@ -1,9 +1,6 @@
 from bs4 import BeautifulSoup
-from IPython.display import display
 import requests
 import pandas as pd
-import os
-from dotenv import load_dotenv, find_dotenv
 from geopy.geocoders import Nominatim
 
 wiki_url = 'https://en.wikipedia.org/wiki/List_of_University_of_Florida_buildings'
@@ -14,7 +11,6 @@ soup = BeautifulSoup(response.text,'html.parser')
 building_list = soup.find('table', attrs={'class': "wikitable sortable"})
 df = pd.read_html(str(building_list))[0].loc[:,'Building[2]']
 
-load_dotenv(find_dotenv())
 
 geolocator = Nominatim(user_agent='unipath',timeout=None)
 
