@@ -7,10 +7,10 @@ class Map:
         self.map = self.graphMaker("building.csv")
         self.mst = nx.minimum_spanning_tree(self.map)
         self.maxst = nx.maximum_spanning_tree(self.map)
-
+    
     def getMap(self):
         return self.map
-    
+
     def getMST(self):
         return self.mst
     
