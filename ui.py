@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import subprocess
 import pandas as pd
+import scraper
 
 
 class Ui_MainWindow(object):
@@ -20,7 +21,6 @@ class Ui_MainWindow(object):
         self.mst = False
         self.from_building = None
         self.to_building = None
-        self.data = pd.read_csv("building.csv",sep=',')
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(801, 600)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -116,7 +116,6 @@ class Ui_MainWindow(object):
         self.listWidget = QtWidgets.QListWidget(self.verticalLayoutWidget_2)
         self.listWidget.setObjectName("listWidget")
         self.listWidget.itemClicked.connect(self.on_selection_changed)
-        self.listWidget.setSelectionMode(QtWidgets.QListWidget.SingleSelection)
         self.verticalLayout_2.addWidget(self.listWidget)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem)
@@ -131,18 +130,49 @@ class Ui_MainWindow(object):
         self.listWidget_2 = QtWidgets.QListWidget(self.verticalLayoutWidget_2)
         self.listWidget_2.setObjectName("listWidget_2")
         self.listWidget_2.itemClicked.connect(self.on_selection_changed_2)
-        self.listWidget_2.setSelectionMode(QtWidgets.QListWidget.SingleSelection)
         self.verticalLayout_2.addWidget(self.listWidget_2)
+        self.verticalLayoutWidget_4 = QtWidgets.QWidget(self.centralwidget)
+        self.verticalLayoutWidget_4.setGeometry(QtCore.QRect(240, 470, 321, 71))
+        self.verticalLayoutWidget_4.setObjectName("verticalLayoutWidget_4")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_4)
+        self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.label_7 = QtWidgets.QLabel(self.verticalLayoutWidget_4)
+        font = QtGui.QFont()
+        font.setFamily("Bahnschrift Condensed")
+        font.setPointSize(10)
+        self.label_7.setFont(font)
+        self.label_7.setObjectName("label_7")
+        self.verticalLayout_4.addWidget(self.label_7)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.textEdit = QtWidgets.QLineEdit(self.verticalLayoutWidget_4)
+        self.textEdit.setObjectName("textEdit")
+        self.horizontalLayout.addWidget(self.textEdit)
+        self.pushButton_2 = QtWidgets.QPushButton(self.verticalLayoutWidget_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
+        self.pushButton_2.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setFamily("Bahnschrift")
+        self.pushButton_2.setFont(font)
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_2.clicked.connect(self.on_button_clicked)
+        self.horizontalLayout.addWidget(self.pushButton_2)
+        self.verticalLayout_4.addLayout(self.horizontalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
-        for ind,item in self.data.iterrows():
-            self.listWidget.addItem(item.at["Building"])
-            self.listWidget_2.addItem(item.at["Building"])
-
-
+        try:
+            self.data = pd.read_csv("building.csv",sep=',')
+            for ind,item in self.data.iterrows():
+                self.listWidget.addItem(item.at["Building"])
+                self.listWidget_2.addItem(item.at["Building"])
+        except:
+            pass
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -151,14 +181,16 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "Unipath"))
         self.label.setText(_translate("MainWindow", "Unipath"))
         self.label_2.setText(_translate("MainWindow", "College Campus Mapper"))
-        self.pushButton.setText(_translate("MainWindow", "Enter"))
+        self.pushButton.setText(_translate("MainWindow", "Start"))
         self.label_3.setText(_translate("MainWindow", "Visualization"))
         self.checkBox.setText(_translate("MainWindow", "MinST"))
         self.checkBox_2.setText(_translate("MainWindow", "MaxST"))
         self.label_5.setText(_translate("MainWindow", "Singular Path"))
         self.label_6.setText(_translate("MainWindow", "From"))
         self.label_4.setText(_translate("MainWindow", "to"))
-
+        self.label_7.setText(_translate("MainWindow", "Format: Wikipedia Link of Buildings, Other Identifiers (City, State, etc.)"))
+        self.pushButton_2.setText(_translate("MainWindow", "Enter"))
+    
     def checkbox_changed(self, state):
         self.mst = state == QtCore.Qt.Checked
         self.listWidget.clearSelection()
@@ -181,13 +213,40 @@ class Ui_MainWindow(object):
         self.from_building = self.listWidget.currentItem().text()
         self.checkBox.setChecked(False)
         self.checkBox_2.setChecked(False)
+        if (self.from_building == self.to_building):
+            self.to_building = None
+            self.listWidget_2.clearSelection()
 
     
     def on_selection_changed_2(self):
         self.to_building = self.listWidget_2.currentItem().text()
         self.checkBox.setChecked(False)
         self.checkBox_2.setChecked(False)
+        if (self.from_building == self.to_building):
+            self.from_building = None
+            self.listWidget.clearSelection()
 
+    def on_button_clicked(self):
+        userInput = self.textEdit.text()
+        userInput = userInput.split(", ")
+        for item in userInput:
+            print(item)
+        if (len(userInput) > 1):
+            city = userInput[1]
+        else:
+            city = ""
+        success = scraper.scrape(userInput[0],city)
+        if success:
+            self.data = pd.read_csv("building.csv",sep=',')
+            self.listWidget.clear()
+            self.listWidget_2.clear()
+            for ind,item in self.data.iterrows():
+                self.listWidget.addItem(item.at["Building"])
+                self.listWidget_2.addItem(item.at["Building"])
+        else:
+            self.textEdit.setText("Invalid Wikipedia link")
+        
+        
     def openExternal(self):
         if self.from_building is not None and self.to_building is not None:
             subprocess.run(['python', 'main.py', self.from_building, self.to_building])
@@ -204,4 +263,5 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
 
