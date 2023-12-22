@@ -1,1 +1,5 @@
 .env
+__pycache__/nodes.cpython-310.pyc
+__pycache__/scraper.cpython-310.pyc
+map.html
+untitled.ui
