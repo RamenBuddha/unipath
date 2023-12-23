@@ -22,7 +22,7 @@ class Ui_MainWindow(object):
         self.from_building = None
         self.to_building = None
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(801, 600)
+        MainWindow.setFixedSize(801, 600)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -188,7 +188,7 @@ class Ui_MainWindow(object):
         self.label_5.setText(_translate("MainWindow", "Singular Path"))
         self.label_6.setText(_translate("MainWindow", "From"))
         self.label_4.setText(_translate("MainWindow", "to"))
-        self.label_7.setText(_translate("MainWindow", "Format: Wikipedia Link of Buildings, Other Identifiers (City, State, etc.)"))
+        self.label_7.setText(_translate("MainWindow", "Format: \"Wikipedia Link of Buildings, Other Identifiers (City, State, etc.)\""))
         self.pushButton_2.setText(_translate("MainWindow", "Enter"))
     
     def checkbox_changed(self, state):
@@ -237,7 +237,7 @@ class Ui_MainWindow(object):
             city = ""
         success = scraper.scrape(userInput[0],city)
         if success:
-            self.data = pd.read_csv("building.csv",sep=',')
+            self.data = pd.read_csv("building.csv",sep=',',encoding='windows-1252')
             self.listWidget.clear()
             self.listWidget_2.clear()
             for ind,item in self.data.iterrows():
