@@ -19,7 +19,7 @@ class Map:
 
     def graphMaker(self, filename):
         visited = set()
-        data = pd.read_csv(filename,sep=',')
+        data = pd.read_csv(filename,sep=',', encoding='windows-1252')
         map = nx.Graph()
         for index, data1 in data.iterrows():
             for index2, data2 in data.iterrows():
