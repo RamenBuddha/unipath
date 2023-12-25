@@ -1,0 +1,7 @@
+PyQt5
+pandas
+geopy
+requests
+bs4
+networkx
+folium
