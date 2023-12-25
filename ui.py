@@ -180,7 +180,7 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Unipath"))
         self.label.setText(_translate("MainWindow", "Unipath"))
-        self.label_2.setText(_translate("MainWindow", "College Campus Mapper"))
+        self.label_2.setText(_translate("MainWindow", "Place Mapper"))
         self.pushButton.setText(_translate("MainWindow", "Start"))
         self.label_3.setText(_translate("MainWindow", "Visualization"))
         self.checkBox.setText(_translate("MainWindow", "MinST"))
