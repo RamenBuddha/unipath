@@ -11,11 +11,12 @@ Unipath is a place mapper which can visualize a place and all its buildings usin
 
 
 ## Instructions
-To run open terminal and type:
+To run open terminal in the unipath folder and type:
 ```sh
 pip install -r req.txt
 python ui.py
 ```
+Make sure you have pip installed!
 
 
 Be sure that the Wikipedia page you wish to use has this tabular format:
