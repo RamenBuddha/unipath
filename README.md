@@ -7,7 +7,7 @@ Unipath is a place mapper which can visualize a place and all its buildings usin
 
 - Place to place mapping
 - Minimum Spanning Tree
-- Maximum Spannning Tree
+- Maximum Spanning Tree
 
 
 ## Instructions
